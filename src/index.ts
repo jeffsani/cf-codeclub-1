@@ -17,7 +17,7 @@ export default {
 	  if (request.method === 'POST') {
 		return handlePostRequest(request);
 	  } else if (url.hostname === 'www.cloudflareworkers.com' && url.pathname === '/test') {
-		return new Response('Hello worker!', {
+		return new Response('Hello Worker!', {
 		  headers: {
 			'content-type': 'text/plain',
 		  },
