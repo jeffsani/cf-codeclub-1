@@ -10,9 +10,39 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request: Request, env: any, ctx: any): Promise<Response> {
+	  const url = new URL(request.url);
+  
+	  if (request.method === 'POST') {
+		return handlePostRequest(request);
+	  } else if (url.hostname === 'www.cloudflareworkers.com' && url.pathname === '/test') {
+		return new Response('Hello worker!', {
+		  headers: {
+			'content-type': 'text/plain',
+		  },
+		});
+	  } else {
+		return new Response('Error Worker! Wrong URL', {
+		  headers: {
+			'content-type': 'text/plain',
+		  },
+		});
+	  }
 	},
-};
+  };
+  
+  const handlePostRequest = async (request: Request): Promise<Response> => {
+	const body = await request.text();
+	const jsonResponse = {
+	  method: request.method,
+	  body: body,
+	  message: 'This is a POST request response',
+	};
+  
+	return new Response(JSON.stringify(jsonResponse), {
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	});
+  };
